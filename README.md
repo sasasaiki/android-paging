@@ -1,7 +1,7 @@
 # android-paging
 Code for the Paging Codelab: https://codelabs.developers.google.com/codelabs/android-paging/
 
-フォークして実際にAndroidPagingCodelabを進めていきます。
+フォークして実際にAndroidPagingCodelabを進めていきます。（codelabブランチ）
 
 下記二つの問題点がPagingを使うことで解決できます
 
