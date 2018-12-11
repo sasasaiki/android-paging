@@ -18,6 +18,7 @@ package com.example.android.codelabs.paging.data
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.LivePagedListBuilder
 import com.example.android.codelabs.paging.api.GithubService
 import com.example.android.codelabs.paging.api.searchRepos
 import com.example.android.codelabs.paging.db.GithubLocalCache
@@ -45,11 +46,13 @@ class GithubRepository(
      */
     fun search(query: String): RepoSearchResult {
         Log.d("GithubRepository", "New query: $query")
-        lastRequestedPage = 1
-        requestAndSaveData(query)
 
-        // Get data from the local cache
-        val data = cache.reposByName(query)
+        // Get data source factory from the local cache
+        val dataSourceFactory = cache.reposByName(query)
+
+        // FactoryからPagedListのLiveDataを生成。一度に読み込むデータ数を渡す
+        // Get the paged list
+        val data = LivePagedListBuilder(dataSourceFactory, DATABASE_PAGE_SIZE).build()
 
         return RepoSearchResult(data, networkErrors)
     }
@@ -75,5 +78,12 @@ class GithubRepository(
 
     companion object {
         private const val NETWORK_PAGE_SIZE = 50
+
+        /*
+        一度に何個のデータをDBから読み込むか
+        小さいと更新回数が多くなるせいでチラツキが起きる可能性があり
+        大きいと読み込みに時間がかかる
+        */
+        private const val DATABASE_PAGE_SIZE = 20
     }
 }
